@@ -1,0 +1,18 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Ecologi has already been configured for this user"
+        },
+        "error": {
+            "server_error": "Could not reach Ecologi."
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "scan_interval": "Scan interval (minutes)",
+                    "username": "User"
+                }
+            }
+        }
+    }
+}

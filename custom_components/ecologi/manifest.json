@@ -1,0 +1,11 @@
+{
+  "domain": "ecologi",
+  "name": "Ecologi",
+  "version": "0.1.0",
+  "documentation": "https://github.com/owenvoke/hass-ecologi",
+  "issue_tracker": "https://github.com/owenvoke/hass-ecologi/issues",
+  "requirements": ["ecologi-sdk==0.1.0"],
+  "codeowners": ["@owenvoke"],
+  "iot_class": "cloud_polling",
+  "config_flow": true
+}
