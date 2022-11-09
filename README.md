@@ -5,7 +5,7 @@
 [![Build Status][ico-github-actions]][link-github-actions]
 [![Buy us a tree][ico-treeware-gifting]][link-treeware-gifting]
 
-An [Ecologi](https://ecologi.app) sensor for Home Assistant
+An [Ecologi](https://ecologi.com) sensor for Home Assistant
 
 ## Install
 
