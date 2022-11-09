@@ -25,10 +25,10 @@ class EcologiSensorEntity(CoordinatorEntity[EcologiUpdateCoordinator], SensorEnt
 
     @property
     def native_value(self) -> str:
-        if self.entity_description.key == 'trees':
-            return str(self.coordinator.data.get('trees', STATE_UNAVAILABLE))
-        if self.entity_description.key == 'carbon_offset':
-            return str(self.coordinator.data.get('carbonOffset', STATE_UNAVAILABLE))
+        if self.entity_description.key == "trees":
+            return str(self.coordinator.data.get("trees", STATE_UNAVAILABLE))
+        if self.entity_description.key == "carbon_offset":
+            return str(self.coordinator.data.get("carbonOffset", STATE_UNAVAILABLE))
 
     @property
     def device_info(self) -> DeviceInfo:

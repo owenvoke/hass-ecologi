@@ -27,9 +27,7 @@ SENSORS: tuple[SensorEntityDescription, ...] = (
         icon="mdi:forest",
     ),
     SensorEntityDescription(
-        key="carbon_offset",
-        name="Carbon Offset",
-        icon="mdi:molecule-co2"
+        key="carbon_offset", name="Carbon Offset", icon="mdi:molecule-co2"
     ),
 )
 
