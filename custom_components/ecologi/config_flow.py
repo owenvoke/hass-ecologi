@@ -30,7 +30,7 @@ class EcologiConfigFlow(ConfigFlow, domain=DOMAIN):
     """The configuration flow for an Ecologi system."""
 
     async def async_step_user(
-        self, user_input: dict[str, Any] | None = None
+        self, user_input=None
     ) -> FlowResult:
         errors = {}
         if user_input:
