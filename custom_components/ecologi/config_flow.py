@@ -5,7 +5,7 @@ import logging
 import voluptuous as vol
 
 from homeassistant.config_entries import ConfigEntry, ConfigFlow, OptionsFlow
-from homeassistant.const import CONF_API_TOKEN, CONF_SCAN_INTERVAL, CONF_USERNAME
+from homeassistant.const import CONF_SCAN_INTERVAL, CONF_USERNAME
 from homeassistant.core import callback
 from homeassistant.data_entry_flow import FlowResult
 from ecologi import Ecologi, NotFoundException
@@ -60,7 +60,7 @@ class EcologiConfigFlow(ConfigFlow, domain=DOMAIN):
 
     @staticmethod
     @callback
-    def async_get_options_flow(config_entry: ConfigEntry) -> EcologiOptionsFlowHandler:
+    def async_get_options_flow(config_entry: ConfigEntry) -> OptionsFlow:
         return EcologiOptionsFlowHandler(config_entry)
 
 
