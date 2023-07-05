@@ -29,9 +29,7 @@ CONFIG_SCHEMA = vol.Schema(
 class EcologiConfigFlow(ConfigFlow, domain=DOMAIN):
     """The configuration flow for an Ecologi system."""
 
-    async def async_step_user(
-        self, user_input=None
-    ) -> FlowResult:
+    async def async_step_user(self, user_input=None) -> FlowResult:
         errors = {}
         if user_input:
             try:
