@@ -65,7 +65,7 @@ class EcologiConfigFlow(ConfigFlow, domain=DOMAIN):
 
 
 class EcologiOptionsFlowHandler(OptionsFlow):
-    """Config flow options handler for TIER."""
+    """Config flow options handler for Ecologi."""
 
     def __init__(self, config_entry: ConfigEntry):
         """Initialize options flow."""
