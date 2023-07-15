@@ -7,10 +7,8 @@ from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from . import EcologiUpdateCoordinator
+from . import EcologiUpdateCoordinator, DOMAIN
 from .entity import EcologiSensorEntity
-
-DOMAIN = "ecologi"
 
 _LOGGER = logging.getLogger(__name__)
 
