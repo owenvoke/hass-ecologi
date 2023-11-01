@@ -5,7 +5,6 @@ from datetime import timedelta
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
     Platform,
-    CONF_API_TOKEN,
     CONF_SCAN_INTERVAL,
     CONF_USERNAME,
 )
@@ -25,7 +24,9 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
         name=config_entry.title,
         username=config_entry.data[CONF_USERNAME],
         update_interval=timedelta(
-            minutes=(config_entry.data.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL))
+            minutes=(
+                config_entry.options.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
+            )
         ),
     )
 
@@ -34,6 +35,10 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
     hass.data.setdefault(DOMAIN, {})[config_entry.entry_id] = ecologi_coordinator
 
     await hass.config_entries.async_forward_entry_setups(config_entry, PLATFORMS)
+
+    config_entry.async_on_unload(
+        config_entry.add_update_listener(options_update_listener)
+    )
 
     return True
 
@@ -44,3 +49,10 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         hass.data[DOMAIN].pop(entry.entry_id)
 
     return unload_ok
+
+
+async def options_update_listener(
+    hass: HomeAssistant, config_entry: ConfigEntry
+) -> None:
+    """Handle options update."""
+    await hass.config_entries.async_reload(config_entry.entry_id)
