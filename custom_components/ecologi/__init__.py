@@ -1,4 +1,5 @@
 """The Ecologi integration"""
+
 import logging
 from datetime import timedelta
 
