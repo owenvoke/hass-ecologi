@@ -1,26 +1,39 @@
 {
-    "config": {
-        "abort": {
-            "already_configured": "Ecologi has already been configured for this user"
-        },
-        "error": {
-            "server_error": "Could not reach Ecologi."
-        },
-        "step": {
-            "user": {
-                "data": {
-                    "username": "Username"
-                }
-            }
-        }
+  "config": {
+    "abort": {
+      "already_configured": "Ecologi has already been configured for this user."
     },
-    "options": {
-        "step": {
-            "init": {
-                "data": {
-                    "scan_interval": "Change scan interval (minutes)"
-                }
-            }
+    "error": {
+      "cannot_connect": "Could not reach Ecologi.",
+      "invalid_username": "Invalid username.",
+      "unknown": "Unexpected error."
+    },
+    "step": {
+      "user": {
+        "data": {
+          "username": "Username"
         }
+      }
     }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "data": {
+          "scan_interval": "Scan interval (minutes)"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "trees": { "name": "Trees" },
+      "carbon_offset": { "name": "Carbon offset" }
+    }
+  },
+  "exceptions": {
+    "update_failed": {
+      "message": "Could not fetch data from Ecologi: {error}"
+    }
+  }
 }

@@ -1,0 +1,8 @@
+{
+  "entity": {
+    "sensor": {
+      "trees": { "default": "mdi:forest" },
+      "carbon_offset": { "default": "mdi:molecule-co2" }
+    }
+  }
+}

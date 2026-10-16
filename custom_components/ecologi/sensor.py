@@ -1,41 +1,61 @@
-import logging
-from datetime import timedelta
+"""Sensors for Ecologi."""
 
-from homeassistant.components.sensor import SensorEntityDescription
-from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import Platform
+from __future__ import annotations
+
+from collections.abc import Callable
+from dataclasses import dataclass
+
+from ecologi import Impact
+from homeassistant.components.sensor import SensorEntityDescription, SensorStateClass
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
-from . import EcologiUpdateCoordinator, DOMAIN
+from .coordinator import EcologiConfigEntry
 from .entity import EcologiSensorEntity
 
-_LOGGER = logging.getLogger(__name__)
+PARALLEL_UPDATES = 0
 
-PLATFORMS: list[Platform] = [Platform.SENSOR]
 
-ICON = "mdi:forest"
+@dataclass(frozen=True, kw_only=True)
+class EcologiSensorEntityDescription(SensorEntityDescription):
+    """Describes an Ecologi sensor."""
 
-SCAN_INTERVAL = timedelta(minutes=5)
+    value_fn: Callable[[Impact], int | float | None]
 
-SENSORS: tuple[SensorEntityDescription, ...] = (
-    SensorEntityDescription(
+
+SENSORS: tuple[EcologiSensorEntityDescription, ...] = (
+    EcologiSensorEntityDescription(
         key="trees",
-        name="Trees",
-        icon="mdi:forest",
+        translation_key="trees",
+        state_class=SensorStateClass.MEASUREMENT,
+        value_fn=lambda impact: impact.get("trees"),
     ),
-    SensorEntityDescription(
-        key="carbon_offset", name="Carbon Offset", icon="mdi:molecule-co2"
+    EcologiSensorEntityDescription(
+        key="carbon_offset",
+        translation_key="carbon_offset",
+        state_class=SensorStateClass.MEASUREMENT,
+        value_fn=lambda impact: impact.get("carbonOffset"),
     ),
 )
 
 
 async def async_setup_entry(
-    hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback
+    hass: HomeAssistant,
+    entry: EcologiConfigEntry,
+    async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
-    """Set up all sensors for this entry."""
-    coordinator: EcologiUpdateCoordinator = hass.data[DOMAIN][entry.entry_id]
-
+    """Set up the sensors."""
     async_add_entities(
-        EcologiSensorEntity(coordinator, description) for description in SENSORS
+        EcologiSensor(entry.runtime_data, description) for description in SENSORS
     )
+
+
+class EcologiSensor(EcologiSensorEntity):
+    """An Ecologi impact sensor."""
+
+    entity_description: EcologiSensorEntityDescription
+
+    @property
+    def native_value(self) -> int | float | None:
+        """Return the sensor's value."""
+        return self.entity_description.value_fn(self.coordinator.data)

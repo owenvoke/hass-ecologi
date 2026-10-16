@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com), and this 
 
 ## Unreleased
 
+### Changed
+- Require Home Assistant 2026.9 or later
+- Trees and carbon offset are numeric measurements, so they appear in long-term statistics
+- Sensor names are now translated and use sentence case
+
+### Fixed
+- Network errors in the config flow showed an unknown error, and an unknown username had no error message
+- Update failures are now reported to Home Assistant, which retries them
+- The options flow used a deprecated API that no longer works on current Home Assistant
+
 ## v0.1.6 - 2023-11-01
 
 ### Fixed

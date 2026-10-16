@@ -1,101 +1,91 @@
-from datetime import timedelta
-import logging
-import voluptuous as vol
+"""Config flow for the Ecologi integration."""
 
-from homeassistant.config_entries import ConfigEntry, ConfigFlow, OptionsFlow
-from homeassistant.const import CONF_SCAN_INTERVAL, CONF_USERNAME
-from homeassistant.core import callback
-from homeassistant.data_entry_flow import FlowResult
-from ecologi import Ecologi, NotFoundException
+from __future__ import annotations
+
+import logging
+from typing import Any
 
 import homeassistant.helpers.config_validation as cv
+import requests
+import voluptuous as vol
+from ecologi import Ecologi, EcologiException, NotFoundException
+from homeassistant.config_entries import (
+    ConfigEntry,
+    ConfigFlow,
+    ConfigFlowResult,
+    OptionsFlowWithReload,
+)
+from homeassistant.const import CONF_SCAN_INTERVAL, CONF_USERNAME
+from homeassistant.core import callback
 
-from .const import DOMAIN, DEFAULT_SCAN_INTERVAL
+from .const import DEFAULT_SCAN_INTERVAL, DOMAIN
 
-_LOGGER: logging.Logger = logging.getLogger(__package__)
+_LOGGER = logging.getLogger(__name__)
 
-CONFIG_SCHEMA = vol.Schema(
+USER_SCHEMA = vol.Schema({vol.Required(CONF_USERNAME): cv.string})
+
+OPTIONS_SCHEMA = vol.Schema(
     {
-        vol.Required(CONF_USERNAME): cv.string,
+        vol.Required(CONF_SCAN_INTERVAL, default=DEFAULT_SCAN_INTERVAL): vol.All(
+            vol.Coerce(int), vol.Range(min=1)
+        ),
     }
 )
 
 
 class EcologiConfigFlow(ConfigFlow, domain=DOMAIN):
-    """The configuration flow for an Ecologi system."""
+    """Config flow for Ecologi."""
 
-    async def async_step_user(self, user_input=None) -> FlowResult:
-        errors = {}
-        if user_input:
+    async def async_step_user(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """Ask for an Ecologi username."""
+        errors: dict[str, str] = {}
+        if user_input is not None:
+            username = user_input[CONF_USERNAME]
+            await self.async_set_unique_id(f"ecologi_{username}")
+            self._abort_if_unique_id_configured()
+
             try:
-                impact = await self.hass.async_add_executor_job(
-                    lambda: Ecologi().impact(
-                        username=user_input[CONF_USERNAME],
-                    )
-                )
-                if impact:
-                    # Make sure we're not configuring the same device
-                    await self.async_set_unique_id(
-                        f"ecologi_{user_input[CONF_USERNAME]}"
-                    )
-                    self._abort_if_unique_id_configured()
-
-                    return self.async_create_entry(
-                        title=f"Ecologi ({user_input[CONF_USERNAME]})",
-                        data=user_input,
-                    )
+                await self.hass.async_add_executor_job(Ecologi().impact, username)
             except NotFoundException:
                 errors[CONF_USERNAME] = "invalid_username"
+            except (EcologiException, requests.RequestException):
+                errors["base"] = "cannot_connect"
+            except Exception:
+                _LOGGER.exception("Unexpected error fetching the Ecologi impact")
+                errors["base"] = "unknown"
             else:
-                errors[CONF_USERNAME] = "server_error"
+                return self.async_create_entry(
+                    title=f"Ecologi ({username})", data=user_input
+                )
 
         return self.async_show_form(
-            step_id="user", data_schema=CONFIG_SCHEMA, errors=errors
+            step_id="user",
+            data_schema=self.add_suggested_values_to_schema(USER_SCHEMA, user_input),
+            errors=errors,
         )
 
     @staticmethod
     @callback
-    def async_get_options_flow(config_entry: ConfigEntry) -> OptionsFlow:
-        return EcologiOptionsFlowHandler(config_entry)
+    def async_get_options_flow(config_entry: ConfigEntry) -> EcologiOptionsFlow:
+        """Return the options flow."""
+        return EcologiOptionsFlow()
 
 
-class EcologiOptionsFlowHandler(OptionsFlow):
-    """Config flow options handler for Ecologi."""
+class EcologiOptionsFlow(OptionsFlowWithReload):
+    """Options for Ecologi."""
 
-    def __init__(self, config_entry: ConfigEntry):
-        """Initialize options flow."""
-        self.config_entry = config_entry
-        # Cast from MappingProxy to dict to allow update.
-        self.options = dict(config_entry.options)
-
-    async def async_step_init(self, user_input=None) -> FlowResult:
+    async def async_step_init(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
         """Manage the options."""
         if user_input is not None:
-            self.options.update(user_input)
-            coordinator = self.hass.data[DOMAIN][self.config_entry.entry_id]
-
-            update_interval = timedelta(
-                seconds=self.options.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
-            )
-
-            _LOGGER.debug("Updating coordinator, update_interval: %s", update_interval)
-
-            coordinator.update_interval = update_interval
-
-            return self.async_create_entry(title="", data=self.options)
-
-        options_schema = vol.Schema(
-            {
-                vol.Optional(
-                    CONF_SCAN_INTERVAL,
-                    default=self.config_entry.options.get(
-                        CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL
-                    ),
-                ): vol.All(vol.Coerce(int), vol.Range(min=1)),
-            }
-        )
+            return self.async_create_entry(data=user_input)
 
         return self.async_show_form(
             step_id="init",
-            data_schema=options_schema,
+            data_schema=self.add_suggested_values_to_schema(
+                OPTIONS_SCHEMA, self.config_entry.options
+            ),
         )
