@@ -21,7 +21,18 @@ def auto_enable_custom_integrations(enable_custom_integrations: None) -> None:
 def mock_ecologi() -> Generator[MagicMock]:
     """Patch the Ecologi client."""
     client = MagicMock()
-    client.impact.return_value = {"trees": 120, "carbonOffset": 4.25}
+    client.impact.return_value = {
+        "trees": 120,
+        "carbonOffset": 4.25,
+        "carbonRemoval": 0.5,
+        "habitatRestoration": 3,
+        "pending": {
+            "trees": 10,
+            "carbonOffset": 0,
+            "carbonRemoval": 0,
+            "habitatRestoration": 0,
+        },
+    }
     with (
         patch("custom_components.ecologi.config_flow.Ecologi", return_value=client),
         patch("custom_components.ecologi.coordinator.Ecologi", return_value=client),

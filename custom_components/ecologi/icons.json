@@ -1,8 +1,30 @@
 {
   "entity": {
     "sensor": {
-      "trees": { "default": "mdi:forest" },
-      "carbon_offset": { "default": "mdi:molecule-co2" }
+      "trees": {
+        "default": "mdi:forest"
+      },
+      "carbon_offset": {
+        "default": "mdi:molecule-co2"
+      },
+      "carbon_removal": {
+        "default": "mdi:molecule-co2"
+      },
+      "habitat_restoration": {
+        "default": "mdi:sprout"
+      },
+      "pending_trees": {
+        "default": "mdi:forest"
+      },
+      "pending_carbon_offset": {
+        "default": "mdi:molecule-co2"
+      },
+      "pending_carbon_removal": {
+        "default": "mdi:molecule-co2"
+      },
+      "pending_habitat_restoration": {
+        "default": "mdi:sprout"
+      }
     }
   }
 }

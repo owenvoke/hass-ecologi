@@ -6,9 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com), and this 
 
 ## Unreleased
 
+### Added
+- Carbon removal and habitat restoration sensors
+- Units for carbon offset and carbon removal (tonnes of CO₂e) and habitat restoration (square metres)
+- Sensors for pending trees, carbon offset, carbon removal and habitat restoration, disabled by default
+
 ### Changed
 - Require Home Assistant 2026.9 or later
-- Trees and carbon offset are numeric measurements, so they appear in long-term statistics
+- Trees and carbon offset are numeric totals, so they appear in long-term statistics
 - Sensor names are now translated and use sentence case
 
 ### Fixed

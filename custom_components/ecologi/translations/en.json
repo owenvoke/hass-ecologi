@@ -27,8 +27,30 @@
   },
   "entity": {
     "sensor": {
-      "trees": { "name": "Trees" },
-      "carbon_offset": { "name": "Carbon offset" }
+      "trees": {
+        "name": "Trees"
+      },
+      "carbon_offset": {
+        "name": "Carbon offset"
+      },
+      "carbon_removal": {
+        "name": "Carbon removal"
+      },
+      "habitat_restoration": {
+        "name": "Habitat restoration"
+      },
+      "pending_trees": {
+        "name": "Pending trees"
+      },
+      "pending_carbon_offset": {
+        "name": "Pending carbon offset"
+      },
+      "pending_carbon_removal": {
+        "name": "Pending carbon removal"
+      },
+      "pending_habitat_restoration": {
+        "name": "Pending habitat restoration"
+      }
     }
   },
   "exceptions": {

@@ -39,7 +39,10 @@ This can be configured fully via the Integrations interface. Click the following
 
 [![Add Integration](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start?domain=ecologi)
 
-The "Scan interval" can also be configured, this defaults to polling the API every 5 minutes.
+Each user appears as a device with sensors for their trees, carbon offset and carbon removal (in tonnes of CO₂e) and habitat
+restoration (in square metres). Sensors for amounts that are still pending are also available, but are disabled by default.
+
+The "Scan interval" can also be configured, this defaults to polling the API every 2 hours.
 
 ## Security
 
