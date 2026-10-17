@@ -5,10 +5,11 @@ from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import dataclass
 
-from ecologi import Impact
 from homeassistant.components.sensor import SensorEntityDescription, SensorStateClass
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
+
+from ecologi import Impact
 
 from .coordinator import EcologiConfigEntry
 from .entity import EcologiSensorEntity

@@ -8,7 +8,6 @@ from typing import Any
 import homeassistant.helpers.config_validation as cv
 import requests
 import voluptuous as vol
-from ecologi import Ecologi, EcologiException, NotFoundException
 from homeassistant.config_entries import (
     ConfigEntry,
     ConfigFlow,
@@ -17,6 +16,8 @@ from homeassistant.config_entries import (
 )
 from homeassistant.const import CONF_SCAN_INTERVAL, CONF_USERNAME
 from homeassistant.core import callback
+
+from ecologi import Ecologi, EcologiException, NotFoundException
 
 from .const import DEFAULT_SCAN_INTERVAL, DOMAIN
 
@@ -50,7 +51,7 @@ class EcologiConfigFlow(ConfigFlow, domain=DOMAIN):
                 await self.hass.async_add_executor_job(Ecologi().impact, username)
             except NotFoundException:
                 errors[CONF_USERNAME] = "invalid_username"
-            except (EcologiException, requests.RequestException):
+            except EcologiException, requests.RequestException:
                 errors["base"] = "cannot_connect"
             except Exception:
                 _LOGGER.exception("Unexpected error fetching the Ecologi impact")

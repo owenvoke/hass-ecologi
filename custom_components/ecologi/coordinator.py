@@ -7,11 +7,12 @@ import logging
 from datetime import timedelta
 
 import requests
-from ecologi import Ecologi, EcologiException, Impact
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_SCAN_INTERVAL, CONF_USERNAME
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
+
+from ecologi import Ecologi, EcologiException, Impact
 
 from .const import DEFAULT_SCAN_INTERVAL, DOMAIN
 
